@@ -2,9 +2,6 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
-# ==========================================================
-# LOAD & GRAYSCALE
-# ==========================================================
 img = cv2.imread("jalan.jpg", cv2.IMREAD_GRAYSCALE)
 if img is None:
     print("Gambar tidak ditemukan!")
@@ -14,9 +11,7 @@ gray = img.astype(np.float32)
 h, w = gray.shape
 
 
-# ==========================================================
-# MANUAL NORMALIZATION (0–255)
-# ==========================================================
+# NORMALISASI CITRA SECARA MANUAL (0–255)
 def manual_norm(img):
     out = np.zeros_like(img)
     maxv = np.max(img)
@@ -31,9 +26,7 @@ def manual_norm(img):
     return out.astype(np.uint8)
 
 
-# ==========================================================
-# ROBERTS (Manual Rumus Dari PDF)
-# ==========================================================
+# Metode ROBERTS
 def roberts_operator(img):
     out = np.zeros_like(img)
 
@@ -52,9 +45,7 @@ def roberts_operator(img):
     return manual_norm(out)
 
 
-# ==========================================================
-# PREWITT (Manual Rumus Dari PDF)
-# ==========================================================
+# METODE PREWITT 
 def prewitt_operator(img):
     out = np.zeros_like(img)
 
@@ -72,9 +63,7 @@ def prewitt_operator(img):
     return manual_norm(out)
 
 
-# ==========================================================
-# SOBEL (Manual Rumus Dari PDF)
-# ==========================================================
+# METODE SOBEL
 def sobel_operator(img):
     out = np.zeros_like(img)
 
@@ -92,9 +81,7 @@ def sobel_operator(img):
     return manual_norm(out)
 
 
-# ==========================================================
-# FREI-CHEN (Manual Rumus Dari PDF)
-# ==========================================================
+# METODE FREI-CHEN 
 def frei_chen_operator(img):
     out = np.zeros_like(img)
     k = 2 ** 0.5  # sqrt(2)
@@ -113,18 +100,14 @@ def frei_chen_operator(img):
     return manual_norm(out)
 
 
-# ==========================================================
 # PROSES SEMUA METODE
-# ==========================================================
 rob = roberts_operator(gray)
 pre = prewitt_operator(gray)
 sob = sobel_operator(gray)
 frei = frei_chen_operator(gray)
 
 
-# ==========================================================
-# TAMPILKAN GRID
-# ==========================================================
+# TAMPILKAN CITRA
 plt.figure(figsize=(12, 20))
 
 plt.subplot(3, 2, 1)
