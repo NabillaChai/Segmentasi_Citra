@@ -2,9 +2,6 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
-# ==========================================================
-# LOAD & GRAYSCALE
-# ==========================================================
 img = cv2.imread("jalan.jpg", cv2.IMREAD_GRAYSCALE)
 if img is None:
     print("Gambar tidak ditemukan!")
@@ -14,9 +11,7 @@ gray = img.astype(np.float32)
 h, w = gray.shape
 
 
-# ==========================================================
-# MANUAL PEPPER NOISE
-# ==========================================================
+# PEPPER NOISE
 def manual_pepper_noise(image, prob=0.05):
     noisy = image.copy()
 
@@ -32,9 +27,7 @@ def manual_pepper_noise(image, prob=0.05):
 pepper_img = manual_pepper_noise(gray, prob=0.05)
 
 
-# ==========================================================
-# MANUAL NORMALIZATION
-# ==========================================================
+# NORMALISASI CITRA SECARA MANUAL (0–255)
 def manual_norm(img):
     out = np.zeros_like(img)
     maxv = np.max(img)
@@ -49,9 +42,7 @@ def manual_norm(img):
     return out.astype(np.uint8)
 
 
-# ==========================================================
-# ROBERTS MANUAL
-# ==========================================================
+# METODE ROBERTS
 def roberts_operator(img):
     out = np.zeros_like(img)
 
@@ -70,9 +61,7 @@ def roberts_operator(img):
     return manual_norm(out)
 
 
-# ==========================================================
-# PREWITT MANUAL
-# ==========================================================
+# METODE PREWITT 
 def prewitt_operator(img):
     out = np.zeros_like(img)
 
@@ -90,9 +79,7 @@ def prewitt_operator(img):
     return manual_norm(out)
 
 
-# ==========================================================
-# SOBEL MANUAL
-# ==========================================================
+# METODE  SOBEL
 def sobel_operator(img):
     out = np.zeros_like(img)
 
@@ -110,9 +97,7 @@ def sobel_operator(img):
     return manual_norm(out)
 
 
-# ==========================================================
-# FREI-CHEN MANUAL
-# ==========================================================
+# METODE FREI-CHEN 
 def frei_chen_operator(img):
     out = np.zeros_like(img)
     k = 2 ** 0.5
@@ -131,18 +116,14 @@ def frei_chen_operator(img):
     return manual_norm(out)
 
 
-# ==========================================================
-# PROSES OPERATOR DENGAN CITRA PEPPER
-# ==========================================================
+# PROSES SEMUA METODE
 rob_pepper = roberts_operator(pepper_img)
 pre_pepper = prewitt_operator(pepper_img)
 sob_pepper = sobel_operator(pepper_img)
 frei_pepper = frei_chen_operator(pepper_img)
 
 
-# ==========================================================
-# TAMPILKAN GRID
-# ==========================================================
+# TAMPILKAN CITRA
 plt.figure(figsize=(12, 20))
 
 plt.subplot(3, 2, 1)
