@@ -2,9 +2,6 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
-# ==========================================================
-# LOAD & GRAYSCALE
-# ==========================================================
 img = cv2.imread("jalan.jpg", cv2.IMREAD_GRAYSCALE)
 if img is None:
     print("Gambar tidak ditemukan!")
@@ -14,16 +11,13 @@ gray = img.astype(np.float32)
 h, w = gray.shape
 
 
-# ==========================================================
-# MANUAL GAUSSIAN NOISE (Box–Muller Transform)
-# ==========================================================
+# GAUSSIAN NOISE
 def manual_gaussian_noise(image, mean=0, sigma=25):
     noisy = np.zeros_like(image)
 
     for y in range(h):
         for x in range(w):
 
-            # Box-Muller: menghasilkan distribusi Gaussian
             u1 = np.random.rand()
             u2 = np.random.rand()
 
@@ -33,7 +27,6 @@ def manual_gaussian_noise(image, mean=0, sigma=25):
 
             val = image[y, x] + noise
 
-            # manual clipping
             if val < 0: val = 0
             if val > 255: val = 255
 
@@ -45,9 +38,7 @@ def manual_gaussian_noise(image, mean=0, sigma=25):
 gauss_img = manual_gaussian_noise(gray, sigma=25)
 
 
-# ==========================================================
-# MANUAL NORMALIZATION
-# ==========================================================
+# NORMALISASI CITRA SECARA MANUAL (0–255)
 def manual_norm(img):
     out = np.zeros_like(img)
     maxv = np.max(img)
@@ -62,9 +53,7 @@ def manual_norm(img):
     return out.astype(np.uint8)
 
 
-# ==========================================================
-# ROBERTS MANUAL
-# ==========================================================
+# METODE ROBERTS
 def roberts_operator(img):
     out = np.zeros_like(img)
 
@@ -83,9 +72,7 @@ def roberts_operator(img):
     return manual_norm(out)
 
 
-# ==========================================================
-# PREWITT MANUAL
-# ==========================================================
+# METODE PREWITT MANUAL
 def prewitt_operator(img):
     out = np.zeros_like(img)
 
@@ -103,9 +90,7 @@ def prewitt_operator(img):
     return manual_norm(out)
 
 
-# ==========================================================
-# SOBEL MANUAL
-# ==========================================================
+# METODE SOBEL 
 def sobel_operator(img):
     out = np.zeros_like(img)
 
@@ -123,9 +108,7 @@ def sobel_operator(img):
     return manual_norm(out)
 
 
-# ==========================================================
-# FREI-CHEN MANUAL
-# ==========================================================
+# METODE FREI-CHEN
 def frei_chen_operator(img):
     out = np.zeros_like(img)
     k = 2 ** 0.5  # sqrt(2)
@@ -143,19 +126,14 @@ def frei_chen_operator(img):
 
     return manual_norm(out)
 
-
-# ==========================================================
-# PROSES SEMUA
-# ==========================================================
+# PROSES SEMUA METODE
 rob_gauss = roberts_operator(gauss_img)
 pre_gauss = prewitt_operator(gauss_img)
 sob_gauss = sobel_operator(gauss_img)
 frei_gauss = frei_chen_operator(gauss_img)
 
 
-# ==========================================================
-# TAMPILKAN GRID (NAMA DIUBAH SESUAI PERMINTAAN)
-# ==========================================================
+# TAMPILKAN CITRA
 plt.figure(figsize=(12, 20))
 
 plt.subplot(3, 2, 1)
