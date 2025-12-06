@@ -84,7 +84,7 @@ def sobel_operator(img):
 # METODE FREI-CHEN 
 def frei_chen_operator(img):
     out = np.zeros_like(img)
-    k = 2 ** 0.5  # sqrt(2)
+    k = 2 ** 0.5  
 
     for y in range(1, h-1):
         for x in range(1, w-1):
