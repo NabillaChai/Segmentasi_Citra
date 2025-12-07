@@ -37,8 +37,8 @@ def roberts_operator(img):
             z3 = img[y+1, x]
             z4 = img[y+1, x+1]
 
-            gx = z2 - z3
-            gy = z1 - z4
+            gx = z1 - z4
+            gy = z2 - z3
 
             out[y, x] = (gx * gx + gy * gy) ** 0.5
 
