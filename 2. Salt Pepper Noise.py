@@ -2,9 +2,6 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
-# ==========================================================
-# LOAD & GRAYSCALE
-# ==========================================================
 img = cv2.imread("jalan.jpg", cv2.IMREAD_GRAYSCALE)
 if img is None:
     print("Gambar tidak ditemukan!")
@@ -14,9 +11,7 @@ gray = img.astype(np.float32)
 h, w = gray.shape
 
 
-# ==========================================================
-# MANUAL SALT & PEPPER NOISE
-# ==========================================================
+# SALT & PEPPER NOISE
 def manual_salt_pepper_noise(image, prob=0.05):
     noisy = image.copy()
 
@@ -35,9 +30,7 @@ def manual_salt_pepper_noise(image, prob=0.05):
 sp_img = manual_salt_pepper_noise(gray, prob=0.05)
 
 
-# ==========================================================
-# MANUAL NORMALIZATION
-# ==========================================================
+# NORMALISASI CITRA SECARA MANUAL (0–255)
 def manual_norm(img):
     out = np.zeros_like(img)
     maxv = np.max(img)
@@ -52,9 +45,7 @@ def manual_norm(img):
     return out.astype(np.uint8)
 
 
-# ==========================================================
-# ROBERTS MANUAL
-# ==========================================================
+# Metode ROBERTS
 def roberts_operator(img):
     out = np.zeros_like(img)
 
@@ -65,17 +56,15 @@ def roberts_operator(img):
             z3 = img[y+1, x]
             z4 = img[y+1, x+1]
 
-            gx = z2 - z3
-            gy = z1 - z4
+            gx = z1 - z4
+            gy = z3 - z2
 
-            out[y, x] = (gx*gx + gy*gy) ** 0.5
+            out[y, x] = (gx * gx + gy * gy) ** 0.5
 
     return manual_norm(out)
 
 
-# ==========================================================
-# PREWITT MANUAL
-# ==========================================================
+# METODE PREWITT 
 def prewitt_operator(img):
     out = np.zeros_like(img)
 
@@ -93,9 +82,7 @@ def prewitt_operator(img):
     return manual_norm(out)
 
 
-# ==========================================================
-# SOBEL MANUAL
-# ==========================================================
+# METODE SOBEL
 def sobel_operator(img):
     out = np.zeros_like(img)
 
@@ -113,12 +100,10 @@ def sobel_operator(img):
     return manual_norm(out)
 
 
-# ==========================================================
-# FREI-CHEN MANUAL
-# ==========================================================
+# METODE FREI-CHEN 
 def frei_chen_operator(img):
     out = np.zeros_like(img)
-    k = np.sqrt(2)
+    k = 2 ** 0.5  
 
     for y in range(1, h-1):
         for x in range(1, w-1):
@@ -134,18 +119,14 @@ def frei_chen_operator(img):
     return manual_norm(out)
 
 
-# ==========================================================
-# PROSES OPERATOR DENGAN SALT & PEPPER
-# ==========================================================
-rob_sp = roberts_operator(sp_img)
-pre_sp = prewitt_operator(sp_img)
-sob_sp = sobel_operator(sp_img)
-frei_sp = frei_chen_operator(sp_img)
+# PROSES SEMUA METODE
+rob = roberts_operator(gray)
+pre = prewitt_operator(gray)
+sob = sobel_operator(gray)
+frei = frei_chen_operator(gray)
 
 
-# ==========================================================
-# TAMPILKAN GRID
-# ==========================================================
+# TAMPILKAN CITRA
 plt.figure(figsize=(12, 20))
 
 plt.subplot(3, 2, 1)
@@ -154,28 +135,23 @@ plt.imshow(gray, cmap='gray')
 plt.axis("off")
 
 plt.subplot(3, 2, 2)
-plt.title("Salt & Pepper Noise")
-plt.imshow(sp_img, cmap='gray')
+plt.title("Grayscale + Roberts")
+plt.imshow(rob, cmap='gray')
 plt.axis("off")
 
 plt.subplot(3, 2, 3)
-plt.title("Salt & Pepper + Roberts")
-plt.imshow(rob_sp, cmap='gray')
+plt.title("Grayscale + Prewitt")
+plt.imshow(pre, cmap='gray')
 plt.axis("off")
 
 plt.subplot(3, 2, 4)
-plt.title("Salt & Pepper + Prewitt")
-plt.imshow(pre_sp, cmap='gray')
+plt.title("Grayscale + Sobel")
+plt.imshow(sob, cmap='gray')
 plt.axis("off")
 
 plt.subplot(3, 2, 5)
-plt.title("Salt & Pepper + Sobel")
-plt.imshow(sob_sp, cmap='gray')
-plt.axis("off")
-
-plt.subplot(3, 2, 6)
-plt.title("Salt & Pepper + Frei-Chen")
-plt.imshow(frei_sp, cmap='gray')
+plt.title("Grayscale + Frei-Chen")
+plt.imshow(frei, cmap='gray')
 plt.axis("off")
 
 plt.tight_layout()
