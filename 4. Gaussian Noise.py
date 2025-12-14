@@ -53,7 +53,7 @@ def manual_norm(img):
     return out.astype(np.uint8)
 
 
-# METODE ROBERTS
+# Metode ROBERTS
 def roberts_operator(img):
     out = np.zeros_like(img)
 
@@ -64,10 +64,10 @@ def roberts_operator(img):
             z3 = img[y+1, x]
             z4 = img[y+1, x+1]
 
-            gx = z2 - z3
-            gy = z1 - z4
+            gx = z1 - z4
+            gy = z3 - z2
 
-            out[y, x] = (gx*gx + gy*gy) ** 0.5
+            out[y, x] = (gx * gx + gy * gy) ** 0.5
 
     return manual_norm(out)
 
