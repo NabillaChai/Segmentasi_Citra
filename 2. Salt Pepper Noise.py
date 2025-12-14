@@ -2,6 +2,9 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
+# ==========================================================
+# LOAD & GRAYSCALE
+# ==========================================================
 img = cv2.imread("jalan.jpg", cv2.IMREAD_GRAYSCALE)
 if img is None:
     print("Gambar tidak ditemukan!")
@@ -11,22 +14,30 @@ gray = img.astype(np.float32)
 h, w = gray.shape
 
 
-# SALT NOISE
-def manual_salt_noise(image, prob=0.05):
+# ==========================================================
+# MANUAL SALT & PEPPER NOISE
+# ==========================================================
+def manual_salt_pepper_noise(image, prob=0.05):
     noisy = image.copy()
 
     for y in range(h):
         for x in range(w):
             r = np.random.rand()
-            if r < prob:
-                noisy[y, x] = 255   # salt = putih
+
+            if r < prob/2:
+                noisy[y, x] = 0       # pepper (hitam)
+            elif r < prob:
+                noisy[y, x] = 255     # salt (putih)
 
     return noisy.astype(np.float32)
 
 
-salt_img = manual_salt_noise(gray, prob=0.05)
+sp_img = manual_salt_pepper_noise(gray, prob=0.05)
 
-# NORMALISASI CITRA SECARA MANUAL (0–255)
+
+# ==========================================================
+# MANUAL NORMALIZATION
+# ==========================================================
 def manual_norm(img):
     out = np.zeros_like(img)
     maxv = np.max(img)
@@ -41,7 +52,9 @@ def manual_norm(img):
     return out.astype(np.uint8)
 
 
-# METODE ROBERTS 
+# ==========================================================
+# ROBERTS MANUAL
+# ==========================================================
 def roberts_operator(img):
     out = np.zeros_like(img)
 
@@ -60,7 +73,9 @@ def roberts_operator(img):
     return manual_norm(out)
 
 
-# METODE PREWITT
+# ==========================================================
+# PREWITT MANUAL
+# ==========================================================
 def prewitt_operator(img):
     out = np.zeros_like(img)
 
@@ -78,7 +93,9 @@ def prewitt_operator(img):
     return manual_norm(out)
 
 
-# METODE SOBEL 
+# ==========================================================
+# SOBEL MANUAL
+# ==========================================================
 def sobel_operator(img):
     out = np.zeros_like(img)
 
@@ -96,10 +113,12 @@ def sobel_operator(img):
     return manual_norm(out)
 
 
-# METODE FREI-CHEN 
+# ==========================================================
+# FREI-CHEN MANUAL
+# ==========================================================
 def frei_chen_operator(img):
     out = np.zeros_like(img)
-    k = 2 ** 0.5
+    k = np.sqrt(2)
 
     for y in range(1, h-1):
         for x in range(1, w-1):
@@ -115,14 +134,18 @@ def frei_chen_operator(img):
     return manual_norm(out)
 
 
-# PROSES SEMUA METODE
-rob_salt = roberts_operator(salt_img)
-pre_salt = prewitt_operator(salt_img)
-sob_salt = sobel_operator(salt_img)
-frei_salt = frei_chen_operator(salt_img)
+# ==========================================================
+# PROSES OPERATOR DENGAN SALT & PEPPER
+# ==========================================================
+rob_sp = roberts_operator(sp_img)
+pre_sp = prewitt_operator(sp_img)
+sob_sp = sobel_operator(sp_img)
+frei_sp = frei_chen_operator(sp_img)
 
 
-# TAMPILKAN CITRA
+# ==========================================================
+# TAMPILKAN GRID
+# ==========================================================
 plt.figure(figsize=(12, 20))
 
 plt.subplot(3, 2, 1)
@@ -131,28 +154,28 @@ plt.imshow(gray, cmap='gray')
 plt.axis("off")
 
 plt.subplot(3, 2, 2)
-plt.title("Salt Noise")
-plt.imshow(salt_img, cmap='gray')
+plt.title("Salt & Pepper Noise")
+plt.imshow(sp_img, cmap='gray')
 plt.axis("off")
 
 plt.subplot(3, 2, 3)
-plt.title("Salt + Roberts")
-plt.imshow(rob_salt, cmap='gray')
+plt.title("Salt & Pepper + Roberts")
+plt.imshow(rob_sp, cmap='gray')
 plt.axis("off")
 
 plt.subplot(3, 2, 4)
-plt.title("Salt + Prewitt")
-plt.imshow(pre_salt, cmap='gray')
+plt.title("Salt & Pepper + Prewitt")
+plt.imshow(pre_sp, cmap='gray')
 plt.axis("off")
 
 plt.subplot(3, 2, 5)
-plt.title("Salt + Sobel")
-plt.imshow(sob_salt, cmap='gray')
+plt.title("Salt & Pepper + Sobel")
+plt.imshow(sob_sp, cmap='gray')
 plt.axis("off")
 
 plt.subplot(3, 2, 6)
-plt.title("Salt + Frei-Chen")
-plt.imshow(frei_salt, cmap='gray')
+plt.title("Salt & Pepper + Frei-Chen")
+plt.imshow(frei_sp, cmap='gray')
 plt.axis("off")
 
 plt.tight_layout()
